@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+. ./path.sh || exit 1
+. ./cmd.sh || exit 1
 
 root_dir=/Users/myixiong/data/LibriSpeech
 data_type="train"
@@ -14,8 +16,9 @@ utils/utt2spk_to_spk2utt.pl ${root_dir}/data-${data_type}/utt2spk > ${root_dir}/
 
 echo "### MAKE MFCCs ###";
 
+##  --cmd './utils/run.pl'
 steps/make_mfcc.sh \
-    --cmd './utils/run.pl' \
+    --cmd ${cmd} \
     --nj $nj \
     --mfcc-config "conf/mfcc.conf" \
     ${root_dir}/data-${data_type}\
@@ -28,8 +31,9 @@ steps/make_mfcc.sh \
 echo "### MAKE VAD ###";
 
 # we remove silence frames according to VAD (Matejka etal 2011)
+#    --cmd './utils/run.pl'
 sid/compute_vad_decision.sh \
-    --cmd './utils/run.pl' \
+    --cmd ${cmd} \
     --nj $nj \
     --vad-config "conf/vad.conf" \
     ${root_dir}/data-${data_type}\
